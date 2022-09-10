@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deploy
+  labels:
+    app.kubernetes.io/name: myapp-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp-deploy
+  template:
+    metadata:
+      labels:
+        app: myapp-deploy
+      annotations:
+        linkerd.io/inject: "enabled"
+    spec:
+      containers:
+      - name: myapp-containerc
+        image: gcr.io/projectsigstore/cosign@sha256:31cd05ffd583a3dc8d3ef59cede98a0f6d8037e5d25379cb7767db3f838b27c0
+        command: ['sh', '-c', 'echo The app is running! && sleep 3600']

@@ -1,0 +1,83 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: zkyverno-resource-validating-webhook-cfg
+  ownerReferences:
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    name: zkyvero-kyverno:webhook
+    uid: b1b9d6d8-4637-4e4b-b45a-22a609127967
+webhooks:
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM3VENDQWRXZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFZTVJZd0ZBWURWUVFEREEwcUxtdDUKZG1WeWJtOHVjM1pqTUI0WERUSXlNRGt4TURFd016Y3dNMW9YRFRJek1Ea3hNREV4TXpjd00xb3dHREVXTUJRRwpBMVVFQXd3TktpNXJlWFpsY201dkxuTjJZekNDQVNJd0RRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DCmdnRUJBTTl6TlRKcVQvc1EreitmQWpWZGxacG45ZzZiYnNnZDAxWmVud3NXckYrL1A2Sjk0NW1PTVlVTDM2MG0KVkJpNEN6eFlUS2dLVXVlS3YrTndPbUs2WDZwQUt1K0hIY2JxR3VOTVlDSklsTG44U01kVnlJODdjV0E0TEFvSQpzOGpLVXZFYUhqdGpxelZ3b2xkUmtNUk5VaDZEVXlJNCt3a29Rc0d5R0FPN2FNaWd3NWlNOXgrU2s0RWRla2ZhCkdjTWFoenBMRzJhVDVScDVyMi9sdnVjOU9UWEVSdVR6dzdCcSs4cUg4bVgrVVBVZmdQbEtCanNjTnl4OWxoSTAKTGR6T1JRN1RESmJYTXJkdW0rUlllc01JdUNRakg1dmt5RElNVVd6bXlzdTBRSnJnaGVaVVlHOGdFNlZEaks5NwpSVDV2RkpsR2hVNkhKeW9HdVAxaEpPcUplRVVDQXdFQUFhTkNNRUF3RGdZRFZSMFBBUUgvQkFRREFnS2tNQThHCkExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRkU4ZkoxWnhhMnVVQS9hNm01NWVDbVRNUkxUc01BMEcKQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUNGSTlTOWlDRm1QOGQwdkRYaEJMdFZ0bFFydy91NU1OVGUxMHdwc1NONgo0L2MvQzFXYnpJRytSMnZlaTZEek84S2tGL092RGUzeDlzRlMzUHNJa2dwbGpsOXMwVDk3VWtjNi9GcU1aRGJxCllWSUsxdTZqYmpCZG5xenF1QWY0NUVoU2s1cjBaa0tnTS9HMkxHOTJZd2lLN0ovbEVwY3FMV3dRZzl4emdhUjEKekZQWGJjdDFNaVFwVnN3enVQUG5GVG82aWtjL3drRWh2OW5wbXNnbStxdlo4V1pMTk82WWpTZ1FOcU1UbTkvUQpyZHI3Z1AwNXFRb2JJa0wyOHRadHp0OTNOR3FJTGFyd2MrYTV2ZzkyUUdQMUF2M0oxTm5KQzNJNngwdG9nRWRDCk85SWFBNjRjbU1aZ2U5TXpiUWdDYm1lamtRQXdGbUUyTXRFVEFsWEJBK2VvCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    service:
+      name: zkyvero-kyverno-svc
+      namespace: kyverno
+      path: /validate
+      port: 443
+  failurePolicy: Ignore
+  matchPolicy: Equivalent
+  name: validate.kyverno.svc-ignore
+  namespaceSelector:
+    matchExpressions:
+    - key: kubernetes.io/metadata.name
+      operator: NotIn
+      values:
+      - kube-system
+      - kyverno
+    - key: kubernetes.io/metadata.name
+      operator: NotIn
+      values:
+      - kyverno
+  objectSelector: {}
+  sideEffects: NoneOnDryRun
+  timeoutSeconds: 10
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM3VENDQWRXZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFZTVJZd0ZBWURWUVFEREEwcUxtdDUKZG1WeWJtOHVjM1pqTUI0WERUSXlNRGt4TURFd016Y3dNMW9YRFRJek1Ea3hNREV4TXpjd00xb3dHREVXTUJRRwpBMVVFQXd3TktpNXJlWFpsY201dkxuTjJZekNDQVNJd0RRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DCmdnRUJBTTl6TlRKcVQvc1EreitmQWpWZGxacG45ZzZiYnNnZDAxWmVud3NXckYrL1A2Sjk0NW1PTVlVTDM2MG0KVkJpNEN6eFlUS2dLVXVlS3YrTndPbUs2WDZwQUt1K0hIY2JxR3VOTVlDSklsTG44U01kVnlJODdjV0E0TEFvSQpzOGpLVXZFYUhqdGpxelZ3b2xkUmtNUk5VaDZEVXlJNCt3a29Rc0d5R0FPN2FNaWd3NWlNOXgrU2s0RWRla2ZhCkdjTWFoenBMRzJhVDVScDVyMi9sdnVjOU9UWEVSdVR6dzdCcSs4cUg4bVgrVVBVZmdQbEtCanNjTnl4OWxoSTAKTGR6T1JRN1RESmJYTXJkdW0rUlllc01JdUNRakg1dmt5RElNVVd6bXlzdTBRSnJnaGVaVVlHOGdFNlZEaks5NwpSVDV2RkpsR2hVNkhKeW9HdVAxaEpPcUplRVVDQXdFQUFhTkNNRUF3RGdZRFZSMFBBUUgvQkFRREFnS2tNQThHCkExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRkU4ZkoxWnhhMnVVQS9hNm01NWVDbVRNUkxUc01BMEcKQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUNGSTlTOWlDRm1QOGQwdkRYaEJMdFZ0bFFydy91NU1OVGUxMHdwc1NONgo0L2MvQzFXYnpJRytSMnZlaTZEek84S2tGL092RGUzeDlzRlMzUHNJa2dwbGpsOXMwVDk3VWtjNi9GcU1aRGJxCllWSUsxdTZqYmpCZG5xenF1QWY0NUVoU2s1cjBaa0tnTS9HMkxHOTJZd2lLN0ovbEVwY3FMV3dRZzl4emdhUjEKekZQWGJjdDFNaVFwVnN3enVQUG5GVG82aWtjL3drRWh2OW5wbXNnbStxdlo4V1pMTk82WWpTZ1FOcU1UbTkvUQpyZHI3Z1AwNXFRb2JJa0wyOHRadHp0OTNOR3FJTGFyd2MrYTV2ZzkyUUdQMUF2M0oxTm5KQzNJNngwdG9nRWRDCk85SWFBNjRjbU1aZ2U5TXpiUWdDYm1lamtRQXdGbUUyTXRFVEFsWEJBK2VvCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    service:
+      name: zkyvero-kyverno-svc
+      namespace: kyverno
+      path: /validate
+      port: 443
+  failurePolicy: Fail
+  matchPolicy: Equivalent
+  name: validate.kyverno.svc-fail
+  namespaceSelector:
+    matchExpressions:
+    - key: kubernetes.io/metadata.name
+      operator: NotIn
+      values:
+      - kube-system
+      - kyverno
+    - key: kubernetes.io/metadata.name
+      operator: NotIn
+      values:
+      - kyverno
+  objectSelector: {}
+  rules:
+  - apiGroups:
+    - ""
+    - apps
+    - batch
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    - DELETE
+    - CONNECT
+    resources:
+    - pods
+    - daemonsets
+    - deployments
+    - jobs
+    - statefulsets
+    - cronjobs
+    - pods/ephemeralcontainers
+    scope: '*'
+  sideEffects: NoneOnDryRun
+  timeoutSeconds: 30

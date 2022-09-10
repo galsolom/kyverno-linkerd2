@@ -1,0 +1,53 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-pod-images
+spec:
+  validationFailureAction: enforce
+  background: false
+  webhookTimeoutSeconds: 30
+  failurePolicy: Fail
+  rules:
+    - name: verify-pod-images
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+      verifyImages:
+      - verifyDigest: false
+        mutateDigest: false
+        required: true
+        imageReferences:
+        - "*gcr.io/*"
+        attestors:
+        - count: 1
+          entries:
+          - keys:
+              publicKeys: |-
+                -----BEGIN PUBLIC KEY-----
+                MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhyQCx0E9wQWSFI9ULGwy3BuRklnt
+                IqozONbbdbqz11hlRJy9c7SG+hdcFl9jE9uE/dwtuwU2MqU9T/cN0YkWww==
+                -----END PUBLIC KEY-----
+    - name: verify-linkerd2-images
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+      verifyImages:
+      - verifyDigest: false
+        mutateDigest: false
+        required: true
+        imageReferences:
+        - "*galsolom/*"
+        attestors:
+        - count: 1
+          entries:
+          - keys:
+              publicKeys: |-
+                -----BEGIN PUBLIC KEY-----
+                MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEb6rCCNUOPUVEP05sDctcvFr3SELG
+                FjxqsGACmnyHb84iiGh2nz6tXA8Vhw+4P+3YtUvYdTMaD8poMlXkC0FK6g==
+                -----END PUBLIC KEY-----
+

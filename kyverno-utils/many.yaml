@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: many-deploy
+  labels:
+    app.kubernetes.io/name: many
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: many
+  template:
+    metadata:
+      labels:
+        app: many
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      containers:
+      - name: myapp-containerc
+        image: gcr.io/projectsigstore/cosign@sha256:31cd05ffd583a3dc8d3ef59cede98a0f6d8037e5d25379cb7767db3f838b27c0
+        command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+      - name: myapp-containera
+        image: gcr.io/projectsigstore/cosign@sha256:9377edd13ae515dcb97c15052e577a2cbce098f36b0361bdb2348e3bdd8fe536
+        command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+      - name: myapp-containerbd
+        image: gcr.io/projectsigstore/cosign@sha256:31cd05ffd583a3dc8d3ef59cede98a0f6d8037e5d25379cb7767db3f838b27c0
+        command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+      initContainers:
+      - name: init-myservice
+        image: gcr.io/projectsigstore/cosign@sha256:9377edd13ae515dcb97c15052e577a2cbce098f36b0361bdb2348e3bdd8fe536
+        command: ['cosign','version']
+      - name: init-mydb
+        image: gcr.io/projectsigstore/cosign@sha256:f9fd5a287a67f4b955d08062a966df10f9a600b6b8583fd367bce3f1f000a429
+        command: ['cosign','version']
+      - name: init-mydbx
+        image: gcr.io/projectsigstore/cosign@sha256:73f9fbeeb6efbcc0d3281bb4dce52090a2c7c30716833e1d10fb9d2ae72ec508
+        command: ['cosign','version']
